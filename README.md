@@ -50,15 +50,8 @@ Bun Runtime · Agentuity SDK · GPT-4o-mini · AI-SDK Tools · Slack Web API · 
    - read:profile  
    - read:body_measurement  
 
-3. **Save WHOOP Credentials**  
-   In your `.env` file:
-   ```
-   WHOOP_CLIENT_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
-   WHOOP_CLIENT_SECRET=super-secret-string
-   ```
-
-4. **Generate an OAuth Authorization Code**  
-   Build and open in your browser (replace `<WHOOP_CLIENT_ID>`):  
+3. **Generate an OAuth Authorization Code**  
+   Build and open in your browser (replace `<WHOOP_CLIENT_ID>` from the WHOOP project):  
    ```
    https://api.prod.whoop.com/oauth/oauth2/auth?client_id=<WHOOP_CLIENT_ID>&redirect_uri=http://localhost:3000/callback&response_type=code&scope=read:recovery%20read:cycles%20read:sleep%20read:workout%20read:profile%20read:body_measurement&state=whoopSTATE123
    ```
@@ -67,7 +60,7 @@ Bun Runtime · Agentuity SDK · GPT-4o-mini · AI-SDK Tools · Slack Web API · 
      `http://localhost:3000/callback?code=<AUTH_CODE>&state=whoopSTATE123`  
    - Copy the `code=` value
 
-5. **Exchange the Code for Tokens**  
+4. **Exchange the Code for Tokens**  
    ```bash
    curl -XPOST https://api.prod.whoop.com/oauth/oauth2/token \
      -d grant_type=authorization_code \
@@ -82,7 +75,7 @@ Bun Runtime · Agentuity SDK · GPT-4o-mini · AI-SDK Tools · Slack Web API · 
      WHOOP_ACCESS_TOKEN=<ACCESS_TOKEN>
      ```
 
-6. **Retrieve Your WHOOP User ID**  
+5. **Retrieve Your WHOOP User ID**  
    ```bash
    curl -H "Authorization: Bearer <WHOOP_ACCESS_TOKEN>" \
      https://api.prod.whoop.com/developer/v1/user/profile/basic
