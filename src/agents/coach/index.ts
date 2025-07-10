@@ -18,26 +18,26 @@ export default async function Agent(
   _ctx: AgentContext,
 ) {
   try {
-    /* ───────── 1. raw body ───────── */
+    // 1. raw body
     const rawBody = await req.data.text();
     console.info('[rawBody]', rawBody.slice(0, 200) + (rawBody.length > 200 ? '…' : ''));
 
-    /* ───────── 2. JSON-parse if possible ───────── */
+    // 2. JSON-parse if possible 
     let payload: any = null;
     try { payload = JSON.parse(rawBody); } catch { /* dev-mode ping text */ }
     console.info('[payload keys]', Object.keys(payload || {}));
 
-    /* ───────── 3. Slack URL-verification ───────── */
+    // 3. Slack URL-verification
     if (payload?.type === 'url_verification') {
       console.info('[flow] URL-verification');
       return res.json({ challenge: payload.challenge });
     }
 
-    /* ───────── 4. Slack Events API ───────── */
+    // 4. Slack Events API
     if (payload?.event) {
       console.info('[flow] entered event handler');
 
-      /* 4-A. Signature verification (flatten arrays → string) */
+      // 4a. Signature verification (flatten arrays → string)
       const hdrs = new Headers();
       Object.entries(req.metadata.headers as Record<string, string | string[]>)
         .forEach(([k, v]) => hdrs.set(k, Array.isArray(v) ? (v[0] ?? '') : (v ?? '')));
@@ -58,7 +58,7 @@ export default async function Agent(
         bot_id: evt.bot_id,
       });
 
-      /* 4-B. @-mentions (channels or DMs) */
+      // 4b. @-mentions (channels or DMs)
       if (evt.type === 'app_mention') {
         console.info('[flow] app_mention branch');
         if (allowedUser && evt.user !== allowedUser) return res.text('ignored', 200);
@@ -66,7 +66,7 @@ export default async function Agent(
         return res.text('ok', 200);
       }
 
-      /* 4-C. Direct messages to the bot */
+      // 4c. Direct messages to the bot
       if (
         evt.type === 'message' &&
         evt.channel_type === 'im' &&
@@ -82,7 +82,7 @@ export default async function Agent(
       return res.text('ignored', 200);
     }
 
-    /* ───────── 5. Cron pings / Dev-mode sandbox ───────── */
+    // 5. Cron pings / Dev-mode sandbox
     if (!rawBody || rawBody.includes('"cron"')) {
       console.info('[flow] cron/dev ping');
       const r = await sendReminder();
