@@ -31,7 +31,7 @@ export async function generateResponse(messages: CoreMessage[]) {
     return formatForSlack(`Here are your **last 3 workouts**:\n${lines.join('\n')}`);
   }
 
-  // everything else → let the LLM decide
+  // everything else, let the LLM decide
   const { text } = await generateText({
     model: openai('gpt-4o-mini'),
     system: `
