@@ -37,7 +37,7 @@ export default async function Agent(
     if (payload?.event) {
       console.info('[flow] entered event handler');
 
-      // 4a. Signature verification (flatten arrays → string)
+      // 4a. Signature verification
       const hdrs = new Headers();
       Object.entries(req.metadata.headers as Record<string, string | string[]>)
         .forEach(([k, v]) => hdrs.set(k, Array.isArray(v) ? (v[0] ?? '') : (v ?? '')));
@@ -89,7 +89,7 @@ export default async function Agent(
       return res.text(await r.text(), r.status);
     }
 
-    // 6. Dev-mode free text → LLM
+    // 6. Dev-mode free text, LLM
     console.info('[flow] dev free-text');
     const reply = await generateResponse([{ role: 'user', content: rawBody }]);
     return res.text(reply);
