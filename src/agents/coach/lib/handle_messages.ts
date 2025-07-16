@@ -13,10 +13,6 @@ export async function handleNewAssistantMessage(
 
   try {
     //1. placeholder
-    console.info('[handleDM] chat.postMessage payload →', {
-      channel, thread_ts: thread_ts ?? ts, 
-      text: '🤔 Thinking…',
-    });
     const thinking = await client.chat.postMessage({
       channel,
       thread_ts: thread_ts ?? ts,
@@ -27,22 +23,18 @@ export async function handleNewAssistantMessage(
     const reply = await generateResponse([{ role: 'user', content: text }]);
 
     //3. update the message
-    console.info('[handleDM] chat.update payload →', {
-      channel, ts: thinking.ts, text: reply,
-    });
     await client.chat.update({
       channel,
       ts: thinking.ts!,
       text: reply,
     });
   } catch (err) {
-    /*  any Web-API error object contains: err.data.error  */
-    console.error('[handleDM] Slack API error:', err);
+    // any Web-API error object contains: err.data.error
     await client.chat.postMessage({
       channel,
       thread_ts: thread_ts ?? ts,
       text: `❌ Error: ${(err as any)?.data?.error ?? err}`,
     });
-    throw err;                                // bubble up to index.ts
+    throw err;
   }
 }

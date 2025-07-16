@@ -9,7 +9,6 @@ export async function handleAppMention(event: AppMentionEvent) {
 
   try {
     //1. placeholder
-    console.info('[mention] postMessage →', { channel, thread_ts, text: '🤔 …' });
     const holder = await client.chat.postMessage({
       channel,
       thread_ts: thread_ts ?? ts,
@@ -22,14 +21,13 @@ export async function handleAppMention(event: AppMentionEvent) {
     ]);
 
     //3. update
-    console.info('[mention] update →', { channel, ts: holder.ts, text: reply });
     await client.chat.update({
       channel,
       ts: holder.ts!,
       text: reply,
     });
   } catch (err) {
-    console.error('[mention] Slack API error:', err);
+    console.error('Slack API error:', err);
     throw err;
   }
 }

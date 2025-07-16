@@ -6,7 +6,7 @@ export async function POST() {
   const userId = process.env.AUTHORIZED_USER_ID;
 
   if (!userId) {
-    console.error('[Reminder] Missing AUTHORIZED_USER_ID');
+    console.error('Missing AUTHORIZED_USER_ID');
     return new Response('Unauthorized', { status: 401 });
   }
 
@@ -30,7 +30,7 @@ export async function POST() {
 
     return new Response('Reminder sent!', { status: 200 });
   } catch (err) {
-    console.error('[Reminder] Slack message failed:', err);
+    console.error('Slack message failed:', err);
     return new Response('Failed to send reminder', { status: 500 });
   }
 }
